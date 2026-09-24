@@ -2,7 +2,7 @@
 
 A command-line interface for [`@overpunch/vf-clamp`](https://www.npmjs.com/package/@overpunch/vf-clamp) — restrict variable font axis ranges from the terminal without writing any JavaScript.
 
-![vf-clamp CLI: inspecting a variable font's axes and named instances, then clamping Regular–Bold to a Text WOFF2](https://raw.githubusercontent.com/Liiift-Studio/vf-clamp-cli/main/assets/demo.gif?v=1)
+![vf-clamp CLI: inspecting a variable font's axes and named instances, then clamping Regular–Bold to a Text WOFF2](https://raw.githubusercontent.com/over-punch/vf-clamp-cli/main/assets/demo.gif?v=1)
 
 ## Try it live
 
