@@ -1,7 +1,7 @@
 // `vf-clamp instances <font>` — print all variable axes and named instances in a font.
 
 import type { Command } from 'commander';
-import type { AxisDefinition, FontInstance } from '@liiift-studio/vf-clamp';
+import type { AxisDefinition, FontInstance } from '@overpunch/vf-clamp';
 import { readFontFile, assertFontExtension } from '../utils/font.js';
 import { formatTable, arrowGlyph, ellipsisGlyph } from '../utils/format.js';
 import { classifyError } from '../core/exitCodes.js';
@@ -51,7 +51,7 @@ async function runInstances(fontPath: string, opts: InstancesOptions): Promise<v
 	}
 
 	// Dynamic import so --help/--version do not pay engine ESM resolution cost.
-	const { getInstances } = await import('@liiift-studio/vf-clamp');
+	const { getInstances } = await import('@overpunch/vf-clamp');
 	const { axes, instances } = await getInstances(buffer);
 
 	if (axes.length === 0 && !opts.quiet && !opts.json) {

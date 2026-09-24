@@ -3,7 +3,7 @@
 // `src/core/*` and the IO helpers in `src/utils/*`.
 
 import type { Command } from 'commander';
-import type { OutputConfig } from '@liiift-studio/vf-clamp';
+import type { OutputConfig } from '@overpunch/vf-clamp';
 import { readFontFile, writeOutputs, assertFontExtension, sanitizeFilename } from '../utils/font.js';
 import { ellipsisGlyph } from '../utils/format.js';
 import { SUPPORTED_FORMATS, assertFormat, type Format } from '../core/format.js';
@@ -148,7 +148,7 @@ async function runClamp(fontPath: string, opts: ClampOptions): Promise<void> {
 
 	// Dynamic import so `--help`/`--version`/dry-run do not pay the engine's
 	// ESM resolution and Pyodide bootstrap cost.
-	const { clampFont } = await import('@liiift-studio/vf-clamp');
+	const { clampFont } = await import('@overpunch/vf-clamp');
 
 	// Batch ALL outputs into a single clampFont call so Pyodide is initialised
 	// once, the font buffer crosses the WASM bridge once, and fontTools parses

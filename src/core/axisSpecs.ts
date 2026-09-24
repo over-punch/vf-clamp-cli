@@ -2,7 +2,7 @@
 // Moved out of `commands/clamp.ts` so the test suite can import it without
 // pulling commander or the engine.
 
-import type { AxisValue } from '@liiift-studio/vf-clamp';
+import type { AxisValue } from '@overpunch/vf-clamp';
 
 /** Regex for OpenType axis tags — exactly 4 printable ASCII characters. */
 const AXIS_TAG_REGEX = /^[\x20-\x7E]{4}$/;

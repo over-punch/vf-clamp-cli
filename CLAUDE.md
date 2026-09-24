@@ -1,21 +1,21 @@
 # vf-clamp-cli — Claude Code Configuration
 
 ## Inherited Context
-This is a plugin submodule of `@liiift-studio/vf-clamp`. When working inside the
+This is a plugin submodule of `@overpunch/vf-clamp`. When working inside the
 vf-clamp parent repo checkout, Claude Code will also load `vf-clamp/CLAUDE.md` which
 defines the core purpose, API, name table patching approach, and shared conventions.
 
 If working in this repo standalone, read `README.md` for the full context.
 
 ## What This Is
-A Node.js CLI (`vf-clamp` command) that wraps `@liiift-studio/vf-clamp`. Font engineers
+A Node.js CLI (`vf-clamp` command) that wraps `@overpunch/vf-clamp`. Font engineers
 can restrict variable fonts from the terminal without writing any JavaScript.
 
 ## Tech Stack
 - TypeScript, ES modules
 - Node.js 18+
 - commander.js for argument parsing
-- `@liiift-studio/vf-clamp` as the processing engine
+- `@overpunch/vf-clamp` as the processing engine
 
 ## Key Files
 | File | Purpose |

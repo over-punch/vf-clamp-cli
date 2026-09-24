@@ -3,7 +3,7 @@
 
 /**
  * The canonical set of output formats vf-clamp can produce.
- * Kept in lockstep with `OutputFormat` from `@liiift-studio/vf-clamp`; if the
+ * Kept in lockstep with `OutputFormat` from `@overpunch/vf-clamp`; if the
  * engine ever gains/drops a format, change this list and the TS type below.
  * The compile-time `satisfies OutputFormat` check below catches drift.
  */
@@ -16,7 +16,7 @@ export type Format = (typeof SUPPORTED_FORMATS)[number];
 // declare here, this line will fail to compile, alerting us to drift.
 // (Engine ships `OutputFormat = 'ttf' | 'otf' | 'woff' | 'woff2'`.)
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-type _FormatDriftCheck = Format extends import('@liiift-studio/vf-clamp').OutputFormat ? true : never;
+type _FormatDriftCheck = Format extends import('@overpunch/vf-clamp').OutputFormat ? true : never;
 
 /**
  * The set of input font extensions the CLI will accept.

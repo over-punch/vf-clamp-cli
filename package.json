@@ -1,7 +1,7 @@
 {
-	"name": "@liiift-studio/vf-clamp-cli",
+	"name": "@overpunch/vf-clamp-cli",
 	"version": "0.2.2",
-	"description": "CLI for @liiift-studio/vf-clamp — restrict variable font axis ranges from the command line",
+	"description": "CLI for @overpunch/vf-clamp — restrict variable font axis ranges from the command line",
 	"type": "module",
 	"bin": {
 		"vf-clamp": "./dist/index.js"
@@ -23,7 +23,7 @@
 		"prepublishOnly": "npm test && npm run build"
 	},
 	"dependencies": {
-		"@liiift-studio/vf-clamp": "^2.1.4",
+		"@overpunch/vf-clamp": "^2.1.4",
 		"commander": "^12.0.0"
 	},
 	"devDependencies": {

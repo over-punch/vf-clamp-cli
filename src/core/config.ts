@@ -5,7 +5,7 @@
 
 import fs from 'node:fs/promises';
 import path from 'node:path';
-import type { AxisValue } from '@liiift-studio/vf-clamp';
+import type { AxisValue } from '@overpunch/vf-clamp';
 import { assertFormat, type Format } from './format.js';
 
 /** Shape of a single output entry in a config file. */

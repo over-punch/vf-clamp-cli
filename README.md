@@ -1,6 +1,6 @@
-# @liiift-studio/vf-clamp-cli
+# @overpunch/vf-clamp-cli
 
-A command-line interface for [`@liiift-studio/vf-clamp`](https://www.npmjs.com/package/@liiift-studio/vf-clamp) — restrict variable font axis ranges from the terminal without writing any JavaScript.
+A command-line interface for [`@overpunch/vf-clamp`](https://www.npmjs.com/package/@overpunch/vf-clamp) — restrict variable font axis ranges from the terminal without writing any JavaScript.
 
 ![vf-clamp CLI: inspecting a variable font's axes and named instances, then clamping Regular–Bold to a Text WOFF2](https://raw.githubusercontent.com/Liiift-Studio/vf-clamp-cli/main/assets/demo.gif?v=1)
 
@@ -13,7 +13,7 @@ Want to see what axis-clamping does before installing anything? **[vfclamp.com](
 Requires **Node.js 18 or newer**.
 
 ```bash
-npm install -g @liiift-studio/vf-clamp-cli
+npm install -g @overpunch/vf-clamp-cli
 ```
 
 ## Discovery
@@ -192,7 +192,7 @@ The underlying engine uses Pyodide (Python WASM). The first run in a process tak
 
 ## Related
 
-- [`@liiift-studio/vf-clamp`](https://www.npmjs.com/package/@liiift-studio/vf-clamp) — the core library
+- [`@overpunch/vf-clamp`](https://www.npmjs.com/package/@overpunch/vf-clamp) — the core library
 - [vfclamp.com](https://vfclamp.com) — web interface
 
 ## License
