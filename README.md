@@ -197,4 +197,4 @@ The underlying engine uses Pyodide (Python WASM). The first run in a process tak
 
 ## License
 
-MIT © [Liiift Studio](https://liiift.studio)
+MIT © [Liiift Studio](https://overpunch.ca)
