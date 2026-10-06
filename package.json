@@ -1,6 +1,6 @@
 {
 	"name": "@overpunch/vf-clamp-cli",
-	"version": "0.2.3",
+	"version": "0.2.4",
 	"description": "CLI for @overpunch/vf-clamp — restrict variable font axis ranges from the command line",
 	"type": "module",
 	"bin": {
