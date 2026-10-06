@@ -148,7 +148,7 @@ async function runClamp(fontPath: string, opts: ClampOptions): Promise<void> {
 
 	// Dynamic import so `--help`/`--version`/dry-run do not pay the engine's
 	// ESM resolution and Pyodide bootstrap cost.
-	const { clampFont } = await import('@overpunch/vf-clamp');
+	const { clampFont, getInstances } = await import('@overpunch/vf-clamp');
 
 	// Batch ALL outputs into a single clampFont call so Pyodide is initialised
 	// once, the font buffer crosses the WASM bridge once, and fontTools parses
@@ -163,7 +163,7 @@ async function runClamp(fontPath: string, opts: ClampOptions): Promise<void> {
 	// compose filenames using our sanitised names rather than whatever the
 	// engine echoed back.
 	const writeInputs = results.map((result, i) => ({
-		name: outputRequests[i]?.name ?? result.name,
+		name: outputRequests[i]?.auto ? sanitizeFilename(result.name) : (outputRequests[i]?.name ?? result.name),
 		buffer: result.buffer,
 		format: result.format ?? format,
 	}));
@@ -175,13 +175,16 @@ async function runClamp(fontPath: string, opts: ClampOptions): Promise<void> {
 		// so machine consumers (build pipelines, batch scripts) can read the
 		// same instance / axis / pinned / size summary the Glyphs and
 		// RoboFont plugins show in their size-estimate strip.
-		const diagnostics = writeInputs.map((result, i) => {
-			const req = outputRequests[i];
-			return {
+		const sourceAxes = (await getInstances(buffer)).axes.length;
+		const diagnostics = [];
+		for (let i = 0; i < writeInputs.length; i++) {
+			const result = writeInputs[i];
+			if (!result) continue;
+			diagnostics.push({
 				path: written[i],
-				...summariseRequest(req, result.buffer),
-			};
-		});
+				...summariseRequest(outputRequests[i], result.buffer, sourceAxes, (await getInstances(result.buffer)).axes.length),
+			});
+		}
 		process.stdout.write(JSON.stringify({ written, diagnostics }) + '\n');
 	} else {
 		for (let i = 0; i < written.length; i++) {
@@ -195,7 +198,9 @@ async function runClamp(fontPath: string, opts: ClampOptions): Promise<void> {
 				const req = outputRequests[i];
 				const result = writeInputs[i];
 				if (req && result) {
-					process.stderr.write(`  ${formatSummary(summariseRequest(req, result.buffer))}\n`);
+					const sourceAxes = (await getInstances(buffer)).axes.length;
+					const outAxes = (await getInstances(result.buffer)).axes.length;
+					process.stderr.write(`  ${formatSummary(summariseRequest(req, result.buffer, sourceAxes, outAxes))}\n`);
 				}
 			}
 		}
@@ -205,8 +210,8 @@ async function runClamp(fontPath: string, opts: ClampOptions): Promise<void> {
 /**
  * Compute the structural-summary fields shown in --verbose / --json output.
  * Mirrors the Glyphs and RoboFont dialogs' `_count_structural` helper:
- * number of licensed instances, total axes the user touched, number of
- * those axes pinned to a single value, and the resulting file size.
+ * number of licensed instances, axes still variable in the output, axes
+ * pinned away (source axes minus output axes), and the resulting file size.
  *
  * Master count is intentionally omitted — the engine doesn't expose
  * post-instancer master geometry through its public API, and computing
@@ -215,26 +220,16 @@ async function runClamp(fontPath: string, opts: ClampOptions): Promise<void> {
 function summariseRequest(
 	req: OutputRequest | undefined,
 	buffer: Uint8Array,
+	sourceAxes: number,
+	outputAxes: number,
 ): { sizeBytes: number; instances: number; axes: number; pinned: number } {
-	const instances = req?.instances?.length ?? 0;
-	const axesObj = req?.axes ?? {};
-	const axes = Object.keys(axesObj).length;
-	let pinned = 0;
-	for (const value of Object.values(axesObj)) {
-		// Numbers in the axes map mean "pin to this value"; objects with
-		// equal min/max are also effectively pinned.
-		if (typeof value === 'number') {
-			pinned++;
-		} else if (
-			value && typeof value === 'object'
-			&& 'min' in value && 'max' in value
-			&& (value as { min: number; max: number }).min
-				=== (value as { min: number; max: number }).max
-		) {
-			pinned++;
-		}
-	}
-	return { sizeBytes: buffer.byteLength, instances, axes, pinned };
+	// Read from the fonts themselves: picking one instance pins every axis even with no --axis flag.
+	return {
+		sizeBytes: buffer.byteLength,
+		instances: req?.instances?.length ?? 0,
+		axes: outputAxes,
+		pinned: Math.max(0, sourceAxes - outputAxes),
+	};
 }
 
 /** Human-readable form of summariseRequest's output. */
@@ -293,12 +288,14 @@ function buildRequestFromFlags(opts: ClampOptions): OutputRequest[] {
 
 	const axes = parseAxisSpecs(axisSpecs);
 
+	// Without --name, the engine names the font itself (e.g. "Encode Sans SemiCondensed-Normal Thin-Light");
+	// this placeholder is only shown by --dry-run.
 	const rawName =
 		name ?? (instances.length > 0 ? instances.join('-') : Object.keys(axes).join('-'));
 
 	const safeName = sanitizeFilename(rawName);
 
-	const req: OutputRequest = { name: safeName };
+	const req: OutputRequest = { name: safeName, ...(name === undefined ? { auto: true } : {}) };
 	if (instances.length > 0) req.instances = instances;
 	if (Object.keys(axes).length > 0) req.axes = axes;
 	return [req];
@@ -309,7 +306,7 @@ function buildRequestFromFlags(opts: ClampOptions): OutputRequest[] {
  */
 function buildClampOutput(req: OutputRequest): OutputConfig {
 	return {
-		name: req.name,
+		...(req.auto ? {} : { name: req.name }),
 		...(req.instances ? { instances: req.instances } : {}),
 		...(req.axes ? { axes: req.axes } : {}),
 	};

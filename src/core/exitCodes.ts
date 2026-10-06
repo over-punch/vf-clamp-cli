@@ -30,6 +30,9 @@ export function classifyError(err: unknown): number {
 	if (msg.startsWith('could not read') || msg.includes('is not a regular file')) return EX_NOINPUT;
 	if (msg.startsWith('invalid --axis') || msg.startsWith('unsupported format')) return EX_USAGE;
 	if (msg.startsWith('provide at least one')) return EX_USAGE;
+	// The engine's own validation errors: an unknown, ambiguous or unselected instance, or an empty name.
+	if (msg.includes('not found in font') || msg.includes('is ambiguous') || msg.includes('would include unselected instances') || msg.includes('output name is empty')) return EX_USAGE;
+	if (msg.includes('not supported yet')) return EX_DATAERR;
 	if (msg.includes('unrecognised font extension')) return EX_USAGE;
 	if (msg.includes('exceeds the') && msg.includes('size cap')) return EX_DATAERR;
 	if (msg.includes('refusing to')) return EX_USAGE;

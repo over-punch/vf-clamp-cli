@@ -53,4 +53,14 @@ describe('classifyError', () => {
 		expect(classifyError(new Error('Config "format" must be a string'))).toBe(EX_CONFIG)
 		expect(classifyError(new Error('Output at index 0: "name" must be a string'))).toBe(EX_CONFIG)
 	})
+
+	it('maps the engine\'s validation errors to EX_USAGE (2), as --help documents', () => {
+		expect(classifyError(new Error('Named instance "Nope" not found in font'))).toBe(EX_USAGE)
+		expect(classifyError(new Error('Named instance "Bold" is ambiguous: 2 instances share that name'))).toBe(EX_USAGE)
+		expect(classifyError(new Error('vf-clamp: output "x" would include unselected instances (Medium)'))).toBe(EX_USAGE)
+	})
+
+	it('maps unsupported fonts to EX_DATAERR (65)', () => {
+		expect(classifyError(new Error('vf-clamp: avar version 2 fonts are not supported yet'))).toBe(EX_DATAERR)
+	})
 })

@@ -26,6 +26,8 @@ export interface ClampConfig {
 /** A resolved output request passed to clampFont. */
 export interface OutputRequest {
 	name: string;
+	/** True when no --name was given: the engine names the font (family plus one range per axis) and the file follows. */
+	auto?: boolean;
 	instances?: string[];
 	axes?: Record<string, AxisValue>;
 }
